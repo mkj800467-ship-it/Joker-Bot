@@ -1,0 +1,23 @@
+[
+    {"question": "😊", "response": "سعيد"},
+    {"question": "😂", "response": "ضحك"},
+    {"question": "😢", "response": "حزين"},
+    {"question": "😡", "response": "غاضب"},
+    {"question": "😍", "response": "حب"},
+    {"question": "🤔", "response": "تفكير"},
+    {"question": "🥺", "response": "توسل"},
+    {"question": "😎", "response": "رائع"},
+    {"question": "🥱", "response": "تثاؤب"},
+    {"question": "😱", "response": "خوف"},
+    {"question": "🤯", "response": "انفجار عقل"},
+    {"question": "🥳", "response": "احتفال"},
+    {"question": "😴", "response": "نعاس"},
+    {"question": "🤒", "response": "مرض"},
+    {"question": "🥶", "response": "برد شديد"},
+    {"question": "🥵", "response": "حر شديد"},
+    {"question": "🤢", "response": "غثيان"},
+    {"question": "🤮", "response": "تقيؤ"},
+    {"question": "😷", "response": "كمامة طبية"},
+    {"question": "🤧", "response": "عطاس"},
+    {"question": "🥴", "response": "دوار"}
+]
