@@ -1,0 +1,33 @@
+{
+  "126783441608906@lid": {
+    "name": "سانجي",
+    "age": 18,
+    "level": "عريف",
+    "coins": 340,
+    "diamonds": 14,
+    "points": 230,
+    "status": "مستور الحال",
+    "registeredAt": "2026-09-01T08:33:16.001Z",
+    "messageCount": 123,
+    "rankLevel": 5,
+    "castle": {
+      "level": 1,
+      "buildings": {
+        "mainCastle": "القلعة الرئيسية (مستوى 1)",
+        "hospital": "المستشفى (مستوى 1)",
+        "barracks": "معسكر الجيش (مستوى 1)"
+      },
+      "army": {
+        "infantry": 5,
+        "warPlanes": 7,
+        "ammoBoxes": 10,
+        "cannons": 5,
+        "shields": 1
+      }
+    },
+    "pendingAttack": {
+      "attackerId": "249916221538@s.whatsapp.net",
+      "timestamp": 1788251760958
+    }
+  }
+}
