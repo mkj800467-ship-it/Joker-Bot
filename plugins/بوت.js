@@ -6,18 +6,18 @@ import { ButtonV2 } from '../core/NIXCODE.js'
 let handler = async (m, { conn }) => {
     try {
         // تفاعل فوري تحت الرسالة
-        await conn.sendMessage(m.chat, { react: { text: '🃏', key: m.key } });
+        await conn.sendMessage(m.chat, { react: { text: '👻', key: m.key } });
 
-        const imageUrl = 'https://i.postimg.cc/qB5ShSRL/IMG-20260829-WA0040.jpg';
+        const imageUrl = 'https://i.postimg.cc/PxLDwHZq/c02c0c5900a754b9ea09775d85254d9b.jpg';
 
         // النص البسيط والمكتوب بطابع إيتاشي البسيط
-        const simpleBody = `♡ Raiden Shogun ♡\n\n♡ 〽️ 𝐉𝐎𝐊𝐄𝐑 𝐁𝐎𝐓 ♞ 𝐁𝐘 𝐈𝐓𝐀𝐂𝐇𝐈 卍 ♡`;
+        const simpleBody = `♡ 亗𝒲𝐸𝐿𝒞𝒪𝑀𝐸 𝐹𝒪𝑅 𝒴𝒪𝒰 ツ ♡`;
 
         await new ButtonV2(conn)
-            .setTitle('♡ Raiden Shogun ♡')
-            .setSubtitle('♡ Raiden Shogun - Plane of Euthymia ♡')
+            .setTitle('♡ 𝚃𝙷𝙴 𝙹𝙾𝙺𝙴𝚁 𝙱𝙾𝚃 ♡')
+            .setSubtitle('♧ 𝒯𝐻𝐸 𝒥𝒪𝒦𝐸𝑅 𝐵𝒪𝒯 𝒲𝒪𝑅𝒦𝐼𝒩𝒢 𝒩𝑜𝓌 ♧')
             .setBody(simpleBody)
-            .setFooter('👑 〽️ 𝐉𝐎𝐊𝐄𝐑 𝐁𝐎𝐓 ♞ 𝐁𝐘 𝐈𝐓𝐀𝐂𝐇𝐈 卍')
+            .setFooter('👑 ➢ 𝑃𝑂𝑊𝐸𝑅 𝑃𝑌 𝐼𝑇𝐴𝐶𝐻𝐼 ღ')
             .setThumbnail(imageUrl)
             .addButton('📂 الـقـائـمـة', '.اوامر')
             .addButton('👑 الـمـطـور', '.المطور')
