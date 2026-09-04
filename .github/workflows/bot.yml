@@ -2,27 +2,32 @@ name: WhatsApp Bot 24/7
 
 on:
   push:
-    branches: [ "main" ]
+    branches: [ main ]
   schedule:
-    - cron: '*/30 * * * *'
-  workflow_dispatch:
+    - cron: '*/30 * * * *' # يبقي البوت نشيطاً ولا يتوقف
 
 jobs:
   build:
+  
     runs-on: ubuntu-latest
 
     steps:
     - name: Checkout repository
-      uses: actions/checkout@v4
+      uses: actions/checkout@v3
 
-    - name: Setup Node.js
-      uses: actions/setup-node@v4
+    - name: Set up Node.js
+      uses: actions/setup-node@v3
       with:
-        node-version: '20'
+        node-version: '18'
 
-    - name: Install Dependencies
+    # 🛠️ الخطوة الحاسمة لتثبيت أدوات النظام (ffmpeg و مكتبات الصور)
+    - name: Install System Dependencies
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y ffmpeg libvips-dev
+
+    - name: Install Node Dependencies
       run: npm install
 
     - name: Start Bot
       run: node index.js
-
