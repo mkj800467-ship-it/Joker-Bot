@@ -85,7 +85,7 @@ async function mp4ToWebpSticker(mp4Buffer) {
     await img.load(webpBuffer)
     const json = {
         'sticker-pack-id': crypto.randomBytes(32).toString('hex'),
-        'sticker-pack-name': '🃏 𝐉𝐎𝐊𝐄𝐑 & 𝐈𝐓𝐀='#00000000', // مرونة الباكج
+        'sticker-pack-name': '🃏 𝐉𝐎𝐊𝐄𝐑 & 𝐈𝐓𝐀𝐂𝐇𝐈',
         'sticker-pack-publisher': '👑 𝐈𝐭𝐚𝐜𝐡𝐢',
         'emojis': ['🃏', '🔥']
     }
@@ -119,7 +119,7 @@ let handler = async (m, { conn, text, usedPrefix, command }) => {
     }
 
     await conn.sendMessage(m.chat, { react: { text: '🎨', key: m.key } })
-    let statusMsg = await m.reply('🃏 *الجوكر وإيتاشي ينشئان الملصق...* ⏳')
+    let statusMsg = await m.reply('🃏 *انتظر قليلا...* ⏳')
     
     try {
         const mp4Buffer = await renderBlinkingVideo(text)
@@ -143,3 +143,4 @@ handler.tags = ['sticker']
 handler.command = ['attp', 'نص_متحرك']
 
 export default handler;
+
