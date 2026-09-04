@@ -1,12 +1,11 @@
 // plugins/rate.js
-// ✧ 𝐈𝐭𝐚𝐜𝐡𝐢♞ | 𝐓𝐇𝐄 𝑱𝑶𝑲𝑬𝑹 ᜰ — نظام التقييم والتواصل السيبراني المتطور ⭐🔥
+// ✧ 𝐈𝐭𝐚𝐜𝐡𝐢♞ | 𝐓𝐇𝐄 𝑱𝑶𝑲𝑬𝑹 ᜰ — نظام التقييم والتواصل ⭐🔥
 
 import { generateWAMessageFromContent, prepareWAMessageMedia, proto } from '@whiskeysockets/baileys';
 
-// تحديد المطورين المعتمدين والمواصفات السيبرانية (تم اعتماد رقم المطور الحقيقي بصيغة JID الصحيحة)
-const allowedOwners = [
-    '249916221538@s.whatsapp.net'
-];
+// رقم المطور المعتمد
+const ownerNumber = '249916221538';
+const ownerJid = `${ownerNumber}@s.whatsapp.net`;
 
 const channelUrl = 'https://whatsapp.com/channel/0029Vb8iiA24tRrvy4FB0H0A';
 const channelName = '𝐈𝐭𝐚𝐜𝐡𝐢♞ | 𝐓𝐇𝐄 𝑱𝑶𝑲𝑬𝑹 ᜰ';
@@ -15,20 +14,17 @@ let handler = async (m, { conn, usedPrefix, command }) => {
     try {
         await conn.sendMessage(m.chat, { react: { text: '⭐', key: m.key } });
 
-        // رابط الصورة السيبرانية الافتراضية
         const imageUrl = 'https://i.postimg.cc/qRP4k4jD/060dd92527391a0367195f8fe94db60c.jpg';
         const mediaMessage = await prepareWAMessageMedia(
             { image: { url: imageUrl } },
             { upload: conn.waUploadToServer }
         );
 
-        // إنشاء رسالة التفاعلية مع أزرار القائمة المندسلة والخيارات الستة باستخدام الهيكل الحديث
         const interactiveMessage = {
             body: {
-                text: `👑 *[ نظام التقييم السيبراني لـ ITACHI & JOKER ]* 👑\n\n` +
-                      `⭐ مرحباً بك أيها المحارب في وحدة التقييم الرسمية.\n` +
-                      `🔮 نسعى دائماً لتطوير النظام وتقديم أفضل تجربة سيبرانية لك.\n\n` +
-                      `📌 *اضغط على الزر أدناه لاختيار تقييمك أو إرسال ملاحظاتك الخاصة للمطور مباشرة!*`
+                text: `⛩️ *[ نظام التقييم الرسمي لـ ITACHI & JOKER ]* ⛩️\n\n` +
+                      `⭐ أهلاً بك يا محارب. رأيك يهمنا لنستمر في التطوير.\n` +
+                      `🔮 يرجى اختيار تقييمك لتجربتك مع البوت عبر القائمة أدناه.`
             },
             footer: {
                 text: `▪️ 👑 ${channelName}`
@@ -39,7 +35,6 @@ let handler = async (m, { conn, usedPrefix, command }) => {
             },
             nativeFlowMessage: {
                 buttons: [
-                    // 1. زر القائمة المندسلة (النجوم الستة للتقييم والملاحظات)
                     {
                         name: "single_select",
                         buttonParamsJson: JSON.stringify({
@@ -51,49 +46,48 @@ let handler = async (m, { conn, usedPrefix, command }) => {
                                         {
                                             header: "⭐ [ 1 نجمة ]",
                                             id: `${usedPrefix}rate_submit 1`,
-                                            title: "غير راضي أبداً ❌",
-                                            description: "تقييم منخفض، يحتاج النظام لتطوير جذري."
+                                            title: "سيء جداً ❌",
+                                            description: "تجربة سيئة للغاية ويحتاج لإصلاحات جزرية."
                                         },
                                         {
                                             header: "⭐⭐ [ نجمتان ]",
                                             id: `${usedPrefix}rate_submit 2`,
-                                            title: "غير راضي 😕",
-                                            description: "هناك الكثير من القصور والأخطاء."
+                                            title: "ضعيف 😕",
+                                            description: "هناك الكثير من الأخطاء التي تواجهني."
                                         },
                                         {
                                             header: "⭐⭐⭐ [ 3 نجوم ]",
                                             id: `${usedPrefix}rate_submit 3`,
-                                            title: "محايد 😐",
-                                            description: "الأداء مقبول لكنه بحاجة لتحسينات."
+                                            title: "مقبول 😐",
+                                            description: "الأداء عادي ويؤدي الغرض."
                                         },
                                         {
                                             header: "⭐⭐⭐⭐ [ 4 نجوم ]",
                                             id: `${usedPrefix}rate_submit 4`,
-                                            title: "راضي وجيد 👍",
-                                            description: "التجربة ممتازة وتلبي الاحتياجات."
+                                            title: "ممتاز 👍",
+                                            description: "تجربة رائعة وتلبي احتياجاتي."
                                         },
                                         {
                                             header: "⭐⭐⭐⭐⭐ [ 5 نجوم ]",
                                             id: `${usedPrefix}rate_submit 5`,
-                                            title: "راضي جداً وبوت أسطوري 😍🔥",
-                                            description: "أداء خارق، دقيق، وفي غاية الجمال والروعة!"
+                                            title: "أسطوري ورائع 😍🔥",
+                                            description: "أداء خارق وسريع جداً!"
                                         },
                                         {
                                             header: "📝 [ ارسل ملاحظاتك ]",
                                             id: `${usedPrefix}rate_feedback`,
                                             title: "إرسال اقتراح أو ملاحظة للمطور 📨",
-                                            description: "تواصل مباشرة مع فريق إيتاشي والجوكر لتسجيل ملاحظتك."
+                                            description: "تواصل مباشرة مع إيتاشي لإرسال ملحوظتك."
                                         }
                                     ]
                                 }
                             ]
                         })
                     },
-                    // 2. زر قناة الواتساب الرسمية المحدث بالرابط الجديد
                     {
                         name: "cta_url",
                         buttonParamsJson: JSON.stringify({
-                            display_text: "📢 تابع قناة النظام الرسمية",
+                            display_text: "📢 تابع قناة البوت الرسمية",
                             url: channelUrl,
                             merchant_url: channelUrl
                         })
@@ -101,8 +95,8 @@ let handler = async (m, { conn, usedPrefix, command }) => {
                 ],
                 messageParamsJson: JSON.stringify({
                     bottom_sheet: {
-                        list_title: "⭐ وحدة التقييم السيبراني",
-                        button_title: "📂 اختر تقييمك ⚡"
+                        list_title: "⭐ قائمة التقييم",
+                        button_title: "📂 اختر التقييم ⚡"
                     }
                 })
             }
@@ -126,63 +120,74 @@ let handler = async (m, { conn, usedPrefix, command }) => {
         await conn.relayMessage(m.chat, msg.message, { messageId: msg.key.id });
 
     } catch (e) {
-        console.error('[ITACHI-Rate Error]:', e);
+        console.error('[Rate Error]:', e);
         await conn.reply(
             m.chat,
-            `👑 *ITACHI & JOKER: "خطأ في النظام"* 👑\n\n` +
-            `⚠️ ${e.message || 'حدث خطأ غير متوقع في تحميل نظام التقييم'}\n\n` +
-            `▪️ 👑 ${channelName}`,
+            `⛩️ *خطأ في النظام:* ${e.message || 'حدث خطأ غير متوقع'}`,
             m
         );
     }
 };
 
-// معالج الأزرار والتفاعل (handler.before) لمعالجة التقييمات وإرسالها للمطورين
 handler.before = async (m, { conn, usedPrefix }) => {
     if (!m.text) return false;
     const cmdText = m.text.trim();
 
-    // التعامل مع اختيار التقييم بالنجوم
     if (cmdText.startsWith(`${usedPrefix}rate_submit `)) {
         const rating = cmdText.replace(`${usedPrefix}rate_submit `, '').trim();
         const stars = '⭐'.repeat(Number(rating) || 1);
         const userJid = m.sender;
-        const userName = m.pushName || 'محارب مجهول';
+        const userName = m.pushName || 'مستخدم مجهول';
 
-        // إرسال رد فوري للمستخدم يؤكد نجاح التقييم
+        // رد مخصص للمستخدم حسب التقييم الذي اختاره
+        let customReply = '';
+        const rateNum = Number(rating);
+
+        if (rateNum === 1) {
+            customReply = `شكراً على لا شيء! سيتم إرسال تقريرك السيء للمطور فوراً ليتحقق من المشكلة 🙂`;
+        } else if (rateNum === 2) {
+            customReply = `شكراً لتقييمك. تم إرسال ملاحظتك للمطور لمعالجة الأخطاء والقصور.`;
+        } else if (rateNum === 3) {
+            customReply = `شكراً لك! تم إرسال تقييمك للمطور لنعمل على تحسين الأداء أكثر.`;
+        } else if (rateNum === 4) {
+            customReply = `شكراً جزيلاً لتقييمك الجميل! تم إرسال تقريرك للمطور 🌟`;
+        } else if (rateNum === 5) {
+            customReply = `أشكرك يا أسطورة على التقييم الخرافي! تم إرسال تقريرك وسعادتك للمطور إيتاشي 🔥`;
+        } else {
+            customReply = `شكراً لتقييمك، تم إرسال التقرير للمطور بنجاح.`;
+        }
+
         await conn.reply(
             m.chat,
-            `👑 *[ شكراً لتقييمك الأسطوري! ]* 👑\n\n` +
-            `🎯 *تقييمك المسجل:* ${stars} (${rating}/5)\n` +
-            `🔥 تم إرسال تقييمك بنجاح إلى غرفة عمليات المطورين!\n\n` +
+            `⛩️ *[ نظام التقييم ]* ⛩️\n\n` +
+            `🎯 *تقييمك:* ${stars} (${rating}/5)\n` +
+            `💬 ${customReply}\n\n` +
             `▪️ 👑 ${channelName}`,
             m
         );
 
-        // توجيه وإرسال تقييم المستخدم مباشرة لكل المطورين المعتمدين في أروقة البوت
-        for (const ownerJid of allowedOwners) {
-            try {
-                await conn.sendMessage(ownerJid, {
-                    text: `👑 *[ إشعار تقييم سيبراني جديد ]* 👑\n\n` +
-                          `👤 *المستخدم:* @${userJid.split('@')[0]} (${userName})\n` +
-                          `⭐ *التقييم:* ${stars} (${rating} نجوم)\n` +
-                          `📍 *رقم الجروب/الشات:* ${m.chat}\n\n` +
-                          `▪️ 👑 ${channelName}`,
-                    mentions: [userJid]
-                });
-            } catch (err) {
-                // تخطي في حال كان JID غير متاح للمراسلة الفورية المباشرة
-            }
+        // إرسال التقييم مباشرة للمطور عبر رقمه الخاص
+        try {
+            await conn.sendMessage(ownerJid, {
+                text: `⛩️ *[ إشعار تقييم جديد من المستخدم ]* ⛩️\n\n` +
+                      `👤 *المستخدم:* @${userJid.split('@')[0]} (${userName})\n` +
+                      `⭐ *التقييم:* ${stars} (${rating} نجوم)\n` +
+                      `📍 *رقم الجروب/الشات:* ${m.chat}\n\n` +
+                      `▪️ 👑 ${channelName}`,
+                mentions: [userJid]
+            });
+        } catch (err) {
+            console.error('فشل إرسال التقييم للمطور:', err);
         }
+
         return true;
     }
 
-    // التعامل مع خيار إرسال الملاحظات والاقتراحات للمطور
     if (cmdText === `${usedPrefix}rate_feedback`) {
         await conn.reply(
             m.chat,
-            `👑 *[ صندوق الملاحظات السيبراني ]* 👑\n\n` +
-            `💬 يرجى الرد على هذه الرسالة واكتب اقتراحك أو ملاحظتك أو المشكلة التي واجهتك، وسيقوم فريق إيتاشي والجوكر بالاطلاع عليها فوراً!\n\n` +
+            `⛩️ *[ صندوق الاقتراحات والملاحظات ]* ⛩️\n\n` +
+            `💬 قم بالرد على هذه الرسالة واكتب اقتراحك أو مشكلتك، وسيتم إرسالها مباشرة للمطور إيتاشي للاطلاع عليها!\n\n` +
             `▪️ 👑 ${channelName}`,
             m
         );
