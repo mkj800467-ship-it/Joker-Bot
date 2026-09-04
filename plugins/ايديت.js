@@ -16,11 +16,15 @@ function isUsableVideo(v) {
 }
 
 async function searchEdits(query) {
-  // دمج البحث بالعربية والإنجليزية معاً لضمان إيجاد نتائج حقيقية واحترافية فوراً
+  // مصفوفة بحث عميقة ومتنوعة لضمان جلب أفضل النتائج بغض النظر عن لغة البحث
+  const cleanQ = query.toLowerCase()
   const queries = [
-    `${query} anime edit 4k`,
-    `${query} إيديت أنمي`,
-    `${query} edit 60fps`,
+    `${cleanQ} anime edit 4k 60fps`,
+    `${cleanQ} 4k HDR anime edit tiktok`,
+    `${cleanQ} amv 1080p`,
+    `best ${cleanQ} edit`,
+    `${query} إيديت أنمي فخم`,
+    `${query} edit`,
     query
   ]
 
@@ -30,15 +34,22 @@ async function searchEdits(query) {
       const result = await yts(q)
       const videos = (result?.videos || [])
         .filter(isUsableVideo)
-        .filter(v => v.seconds > 0 && v.seconds <= 300) // فيديوهات قصيرة وسريعة (تحت 5 دقائق)
+        // استبعاد الفيديوهات الطويلة جداً أو القصيرة جداً (نستهدف الإيديتات من 10 ثواني إلى 4 دقائق)
+        .filter(v => v.seconds >= 5 && v.seconds <= 240)
       
       allVideos.push(...videos)
     } catch {}
   }
 
-  // إزالة التكرار بناءً على الـ videoId
+  // إزالة التكرار بناءً على الـ videoId وترتيب النتائج حسب الجودة والمدة المثالية للإيديت
   const uniqueVideos = Array.from(new Map(allVideos.map(v => [v.videoId, v])).values())
-  return uniqueVideos.sort((a, b) => (a.seconds || 9999) - (b.seconds || 9999))
+  
+  // ترتيب ذكي يفضل الفيديوهات التي تحتوي كلمات مفتاحية قوية مثل edit, 4k, amv
+  return uniqueVideos.sort((a, b) => {
+    const scoreA = (a.title.toLowerCase().includes('edit') ? 2 : 0) + (a.title.toLowerCase().includes('4k') ? 1 : 0)
+    const scoreB = (b.title.toLowerCase().includes('edit') ? 2 : 0) + (b.title.toLowerCase().includes('4k') ? 1 : 0)
+    return scoreB - scoreA
+  })
 }
 
 async function downloadEdit(url, outputPath) {
@@ -67,7 +78,7 @@ let handler = async (m, { conn, text, usedPrefix, command }) => {
   }
 
   const queryName = cleanQuery(text)
-  const status = await m.reply(`⚡ *[ Itachi ]* : جاري استدعاء إيديت أسطوري لـ (*${queryName}*) عبر بُعد الشارينگان... 👁️‍🗨️`)
+  const status = await m.reply(`⚡ *[ Itachi ]* : جاري استدعاء إيديت أسطوري لـ (*${queryName}*) ... 👁️‍🗨️`)
   await conn.sendMessage(m.chat, { react: { text: '👁️', key: m.key } }).catch(() => {})
 
   let outPath = null
@@ -77,8 +88,8 @@ let handler = async (m, { conn, text, usedPrefix, command }) => {
     if (!videos.length) throw new Error('لا توجد نتائج مطابقة في الأبعاد الروحية')
 
     let lastError = null
-    // تجربة أول 6 فيديوهات متاحة لضمان نجاح التحميل الفوري
-    for (const video of videos.slice(0, 6)) {
+    // تجربة أول 8 فيديوهات متاحة لضمان نجاح التحميل الفوري وتجاوز الروابط التالفة
+    for (const video of videos.slice(0, 8)) {
       try {
         const safeId = String(video.videoId || Date.now()).replace(/[^a-zA-Z0-9_-]/g, '')
         outPath = join(tmpdir(), `itachi_edit_${safeId}_${Date.now()}.mp4`)
@@ -100,8 +111,8 @@ let handler = async (m, { conn, text, usedPrefix, command }) => {
             },
             externalAdReply: {
               title: `🎬 EDIT: ${queryName.toUpperCase()}`,
-              body: 'اضغط للانضمام لقناة البوت الرسمية',
-              thumbnailUrl: 'https://files.catbox.moe/g2w389.jpg',
+              body: 'قناه البوت',
+              thumbnailUrl: 'https://i.postimg.cc/PxLDwHZq/c02c0c5900a754b9ea09775d85254d9b.jpg',
               sourceUrl: 'https://whatsapp.com/channel/0029Vb8iiA24tRrvy4FB0H0A',
               mediaType: 1,
               renderLargerThumbnail: true
@@ -131,7 +142,7 @@ let handler = async (m, { conn, text, usedPrefix, command }) => {
     console.error('[Itachi-Edit-Error]', e?.message || e)
     try { await conn.sendMessage(m.chat, { delete: status.key }) } catch {}
     await conn.sendMessage(m.chat, { react: { text: '❌', key: m.key } }).catch(() => {})
-    await m.reply(`❌ *عذراً يا محارب:* تعذر جلب الإيديت المطلوب حالياً بسبب ضغط السيرفرات أو قيود الرابط.\n\n💡 *جرّب كتابة اسم الشخصية بالإنجليزية (مثل: Sasuke أو Gojo) أو حاول مرة أخرى بعد قليل.*`)
+    await m.reply(`❌ *عذراً يا محارب:* تعذر جلب الإيديت المطلوب حالياً بسبب ضغط السيرفرات أو قيود الرابط.\n\n💡 *جرّب كتابة اسم الشخصية بالإنجليزية أو حاول مرة أخرى بعد قليل.*`)
   } finally {
     try { if (outPath && existsSync(outPath)) unlinkSync(outPath) } catch {}
   }
