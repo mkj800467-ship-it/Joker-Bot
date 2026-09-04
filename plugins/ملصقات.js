@@ -144,6 +144,7 @@ async function uploadToServer(conn, buffer, { hkdf, mediaPath, mediaKey = crypto
 
   const token = encodeURIComponent(fileEncSha256.toString('base64').replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/g, ''))
 
+  let lastError
   for (const host of hosts) {
     try {
       const json = await new Promise((resolve, reject) => {
@@ -204,7 +205,7 @@ async function sendStickerPack(conn, m, pack, query) {
     messageContextInfo: { messageSecret: crypto.randomBytes(32) },
     stickerPackMessage: {
       stickerPackId: 'Pack_' + crypto.randomBytes(8).toString('hex'),
-      name: '𝐈𝐭𝐚𝐜𝐡𝐢♞ | 𝐓𝐇𝐄 𝐉𝐎𝐊𝐄𝐑 ᜰ',
+      name: '𝐈𝐭𝐚𝐜𝐡𝐢♞ | 𝐓𝐇𝐄 𝑱𝑶𝑲𝑬𝑹 ᜰ',
       publisher: '𝐈𝐭𝐚𝐜𝐡𝐢♞',
       packDescription: `📦 حزمة: ${query}`,
       stickers: stickersMetadata,
@@ -325,4 +326,4 @@ handler.command = ['ملصقات', 'باكج', 'stickerpack', 'pack']
 handler.help = ['ملصقات [بحث] [عدد]']
 handler.tags = ['sticker']
 
-module.exports = handler
+export default handler
