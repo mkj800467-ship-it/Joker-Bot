@@ -1,5 +1,5 @@
 // plugins/owner.js
-// ✧ 𝐓𝐇𝐄 𝐉𝐎𝐊𝐄𝐑 ᜰ - المطور
+// ✧ 𝐓𝐇𝐄 𝐉𝐎𝐊𝐄𝐑 ᜰ - المطور ⚡
 
 import { theme } from '../core/theme.js'
 
@@ -17,61 +17,42 @@ let handler = async (m, { conn }) => {
       },
       { quoted: m }
     );
-    await new Promise(resolve => setTimeout(resolve, 1200));
+    await new Promise(resolve => setTimeout(resolve, 1000));
   } catch (e) {}
 
-  let vcard = `BEGIN:VCARD
-VERSION:3.0
-FN:✧ 𝐓𝐇𝐄 𝐉𝐎𝐊𝐄𝐑 ᜰ ✧ [ 𝚰𝚻𝚫𝚂𝚮𝚰 ]
-ORG:ITACHI UCHIHA
-TITLE:Supreme Developer & Owner ⚡
-EMAIL;type=INTERNET:go588288@gmail.com
-TEL;type=CELL;waid=249916221538:+249916221538
-ADR;type=WORK:;;Sudan;Hidden Leaf Village ;;
-URL;type=WORK:https://www.instagram.com/go24.q?igsh=MWdoYWtjZWNnMGhncQ==
-X-WA-BIZ-NAME:✧ 𝐓𝐇𝐄 𝐉𝐎𝐊𝐄𝐑 ᜰ ✧
-X-WA-BIZ-DESCRIPTION:❄️ THE JOKER BOT - Mfd by Itachi 卍
-X-WA-BIZ-HOURS:Mo-Su 00:00-23:59
-END:VCARD`
+  // رقم المطور الدولي
+  const ownerNumber = '249916221538'
+  const ownerProfileUrl = 'https://wa.me/' + ownerNumber
 
-  let qkontak = {
-    key: {
-      fromMe: false,
-      participant: "0@s.whatsapp.net",
-      remoteJid: "status@broadcast"
-    },
-    message: {
-      contactMessage: {
-        displayName: "✧ 𝚰𝚻𝚫𝚂𝚮𝚰 ♞ 𝐔𝐂𝐇𝚰𝚮𝚫 ✧",
-        vcard
-      }
-    }
-  }
+  // استمارة ملكية فخمة ومرتبة مع صورة ورابط تواصل مباشر (تتجاوز حظر جهات الاتصال في المجموعات)
+  const ownerCardText = `جوكر بوت ➢ 𝑃𝑂𝑾𝐸𝑅 𝑃𝑌 𝐼𝑇𝐴𝐂𝐇𝐼 ღ
+𝚃𝙷𝙴 𝙹𝙾𝙺𝙴𝚁 𝙱𝐎𝚃
 
-  // إرسال ثيم نصي أنيق يسبق البطاقة لمسة إيتاشي الخالصة
+⚡ *بطاقة المطور الرسمي*
+───────────────────
+👑 *الاسم:* 𝒜7𝑀𝐸𝒟 𝒜𝒩𝒲𝒜𝑅ヅ
+💻 *اللقب:* 𝒰𝒞𝐻𝐼𝐻𝒜 𝐼𝒯𝒜𝒞𝐻𝐼♞
+🌍 *الدولة:* 𝒮𝒰𝒟𝒜𝒩 🇸🇩
+📧 *البريد:* itachi588.com
+───────────────────
+💬 *للتواصل المباشر مع المطور:*
+wa.me/${ownerNumber}
+
+〽️ 𝐉𝐎𝐊𝐄𝐑 𝐁𝐎𝐓 ♞ 𝐁𝐘 𝐈𝐓𝐀𝐂𝐇𝐈 卍`;
+
   await conn.sendMessage(m.chat, {
-    text: theme.build([
-      { type: 'title', text: '⚡ الـمـطـوريـن الأَسـاطـيـر ⚡' },
-      { type: 'divider' },
-      { type: 'info', label: '👑 المطور', value: '✧ 𝐓𝐇𝐄 𝐉𝐎𝐊𝐄𝐑 ᜰ' },
-      { type: 'info', label: '🌙 الماستر', value: '𝚰𝚻𝚫𝚂𝚮𝚰 (Uchiha)' },
-      { type: 'divider' },
-      { type: 'line', text: '❄️ تواصل مع المطور عبر بطاقة الاتصال أدناه ♞' },
-      { type: 'divider' },
-      { type: 'line', text: '〽️ 𝐉𝐎𝐊𝐄𝐑 𝐁𝐎𝐓 ♞ 𝐁𝐘 𝐈𝐓𝐀𝐂𝐇𝐈 卍' }
-    ])
-  }, { quoted: m });
-
-  await conn.sendMessage(
-    m.chat,
-    {
-      contacts: {
-        displayName: '✧ 𝚰𝚻𝚫𝚂𝚮𝚰 ♞ 𝐔𝐂𝐇𝚰𝚮𝚫 ✧',
-        contacts: [{ vcard }]
+    image: { url: 'https://i.postimg.cc/pdpqVg02/70a7c820d3c80a36c1c6f0b74d869b80.jpg' },
+    caption: ownerCardText,
+    footer: 'ITACHI UCHIHA',
+    buttons: [
+      {
+        buttonId: `${ownerProfileUrl}`,
+        buttonText: { displayText: '💬 تواصل مع المطور' },
+        type: 1
       }
-    },
-    { quoted: qkontak }
-  )
+    ],
+    headerType: 4
+  }, { quoted: m });
 }
 
 handler.help = ['owner', 'creator']
