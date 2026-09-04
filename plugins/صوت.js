@@ -6,28 +6,13 @@ import * as cheerio from "cheerio";
 import { generateWAMessageFromContent, proto } from '@whiskeysockets/baileys';
 
 const BASE_URL = "https://www.myinstants.com";
-const EGYPT_URL = `${BASE_URL}/en/index/eg/`;
 const SEARCH_URL = `${BASE_URL}/en/search/?name=`;
 
 let tempResults = new Map();
-let lastSendTime = 0;
-const MIN_DELAY = 8000;
-
-const delay = (ms) => new Promise(resolve => setTimeout(resolve, ms));
-
-async function waitForSend() {
-    const now = Date.now();
-    const elapsed = now - lastSendTime;
-    if (elapsed < MIN_DELAY) {
-        const waitTime = MIN_DELAY - elapsed;
-        await delay(waitTime);
-    }
-    lastSendTime = Date.now();
-}
 
 async function downloadAudio(url) {
     const response = await fetch(url, {
-        headers: { 'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36' }
+        headers: { 'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36' }
     });
     if (!response.ok) throw new Error(`HTTP ${response.status}`);
     const buffer = await response.arrayBuffer();
@@ -37,14 +22,14 @@ async function downloadAudio(url) {
 async function searchSounds(query) {
     const url = `${SEARCH_URL}${encodeURIComponent(query)}`;
     const response = await fetch(url, {
-        headers: { 'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36' }
+        headers: { 'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36' }
     });
     const html = await response.text();
     const $ = cheerio.load(html);
     const results = [];
 
     $('.instant').each((i, el) => {
-        if (i >= 10) return;
+        if (i >= 8) return;
 
         const $el = $(el);
         const title = $el.find('.instant-link').text().trim();
@@ -63,49 +48,22 @@ async function searchSounds(query) {
     return results;
 }
 
-async function getRandomEgyptianSounds() {
-    const response = await fetch(EGYPT_URL, {
-        headers: { 'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36' }
-    });
-
-    const html = await response.text();
-    const $ = cheerio.load(html);
-    const sounds = [];
-
-    $('.instant').each((i, el) => {
-        const $el = $(el);
-        const title = $el.find('.instant-link').text().trim();
-        const button = $el.find('.small-button');
-        const onclick = button.attr('onclick') || '';
-        const match = onclick.match(/play\(['"]([^'"]+)['"]/);
-
-        if (match && match[1]) {
-            let soundUrl = match[1];
-            if (!soundUrl.startsWith('http')) {
-                soundUrl = `${BASE_URL}${soundUrl.startsWith('/') ? '' : '/'}${soundUrl}`;
-            }
-            sounds.push({ title, url: soundUrl });
-        }
-    });
-
-    return sounds;
-}
-
 async function sendResultsAsButtons(conn, chatId, sender, query, results, quoted) {
     const buttons = results.slice(0, 5).map((sound, index) => ({
         name: 'quick_reply',
         buttonParamsJson: JSON.stringify({
-            display_text: `${index + 1}. ${sound.title.substring(0, 35)}`,
+            display_text: `${index + 1}. ${sound.title.substring(0, 30)}`,
             id: `sound_${index}`
         })
     }));
 
-    // إضافة زر القناة الرسمي بالمعرف (Copy Code)
+    // زر القناة الرسمي المحدث بالرابط المطلوب
     buttons.push({
-        name: 'cta_copy',
+        name: 'cta_url',
         buttonParamsJson: JSON.stringify({
             display_text: '📢 𝐈𝐭𝐚𝐜𝐡𝐢♞ | 𝐓𝐇𝐄 𝐉𝐎𝐊𝐄𝐑 ᜰ',
-            copy_code: '120363429074575231@newsletter'
+            url: 'https://whatsapp.com/channel/0029Vb8iiA24tRrvy4FB0H0A',
+            merchant_url: 'https://whatsapp.com/channel/0029Vb8iiA24tRrvy4FB0H0A'
         })
     });
 
@@ -115,14 +73,20 @@ async function sendResultsAsButtons(conn, chatId, sender, query, results, quoted
         timestamp: Date.now()
     });
 
-    const menuText = `⛩️ إتاتشي: "نتائج البحث في الأبعاد الصوتية"\n\n🔮 نتائج البحث عن: *${query}*\n📊 عدد النتائج: *${results.length}*\n\n👁️ اختر الصوت المطلوب من القائمة أدناه لتخترق الوهم:`;
+    const menuText = `جوكر بوت ➢ 𝑃𝑂𝑾𝐸𝑅 𝑃𝑌 𝐼𝑇𝐴𝐂𝐇𝐼 ღ
+𝚃𝙷𝙴 𝙹𝙾𝙺𝙴𝚁 𝙱𝙾𝚃
+
+🔍 نتائج البحث عن: *${query}*
+📊 عدد الأصوات المتاحة: *${results.length}*
+
+اختر الصوت المناسب من القائمة أدناه:`;
 
     const interactiveMessage = proto.Message.InteractiveMessage.create({
         body: proto.Message.InteractiveMessage.Body.create({ text: menuText }),
-        footer: proto.Message.InteractiveMessage.Footer.create({ text: '⛩️ Uchiha Itachi - Sharingan Sounds ⛩️' }),
+        footer: proto.Message.InteractiveMessage.Footer.create({ text: '𝐈𝐭𝐚𝐜𝐡𝐢♞ | 𝐓𝐇𝐄 𝐉𝐎𝐊𝐄𝐑 ᜰ' }),
         header: proto.Message.InteractiveMessage.Header.create({
             hasMediaAttachment: false,
-            title: '🎵 مؤثرات صوتية شارينگان'
+            title: '🎵 مكتبة المؤثرات الصوتية'
         }),
         nativeFlowMessage: proto.Message.InteractiveMessage.NativeFlowMessage.create({
             buttons: buttons,
@@ -130,8 +94,8 @@ async function sendResultsAsButtons(conn, chatId, sender, query, results, quoted
                 bottom_sheet: {
                     in_thread_buttons_limit: 5,
                     divider_indices: [1, 2, 3, 4, 5, 999],
-                    list_title: '🎵 اختر الصوت المناسب',
-                    button_title: '▻ الخيارات ⚡'
+                    list_title: '🎵 اختر الصوت',
+                    button_title: '▻ عرض الأصوات ⚡'
                 }
             })
         })
@@ -149,52 +113,28 @@ let handler = async (m, { conn, text, usedPrefix, command }) => {
         try { await conn.sendMessage(m.chat, { react: { text: emoji, key: m.key } }); } catch {}
     };
 
-    if (text && text.toLowerCase() === 'random') {
-        await react('⏳');
-        await m.reply(`⛩️ إتاتشي: "جاري جلب صوت عشوائي عبر الشارينگان..."`);
-
-        const sounds = await getRandomEgyptianSounds();
-        if (sounds.length === 0) throw new Error('لا توجد أصوات متاحة في الأبعاد الحالية');
-
-        const randomSound = sounds[Math.floor(Math.random() * sounds.length)];
-
-        try {
-            const audioBuffer = await downloadAudio(randomSound.url);
-            await waitForSend();
-
-            await conn.sendMessage(m.chat, {
-                audio: audioBuffer,
-                mimetype: 'audio/mpeg',
-                fileName: `${randomSound.title}.mp3`,
-                caption: `> ⛩️ *إتاتشي: ${randomSound.title}*\n> ⚡ Uchiha Itachi - Sound Dimension`
-            }, { quoted: m });
-
-            await react('✅');
-        } catch (err) {
-            await react('❌');
-            await m.reply(`❌ *فشل استدعاء الصوت:* ${err.message}`);
-        }
-        return;
-    }
-
     if (!text) {
         await react('❌');
         return m.reply(
-            `> ⛩️ *وحدة إتاتشي للمؤثرات الصوتية*\n> \n> 👁️ الاستخدام:\n> \`${usedPrefix}${command} <كلمة البحث>\`\n> \`${usedPrefix}${command} random\`\n> \n> 🩸 أمثلة:\n> \`${usedPrefix}${command} ضحك\`\n> \`${usedPrefix}${command} laugh\``
+            `جوكر بوت ➢ 𝑃𝑂𝑾𝐸𝑅 𝑃𝑌 𝐼𝑇𝐴𝐂𝐇𝐼 ღ\n𝚃𝙷𝙴 𝙹𝙾𝙺𝙴𝚁 𝙱𝙾𝚃\n\n⚠️ *الاستخدام الصحيح:* \`${usedPrefix}${command} ضحك\` أو \`مياو\` أو \`صراخ\`\n\n> يمكنك البحث عن أي صوت تريده (حيوانات، مؤثرات، ضحك، بكاء، إلخ).`
         );
     }
 
     await react('🔍');
-    await m.reply(`⛩️ إتاتشي: "جاري البحث في عوالم الصوت عن: ${text}..."`);
 
-    const sounds = await searchSounds(text);
-    if (sounds.length === 0) {
+    try {
+        const sounds = await searchSounds(text);
+        if (sounds.length === 0) {
+            await react('❌');
+            return m.reply(`❌ لم يتم العثور على نتائج مطابقة لـ: *${text}*\n💡 جرب استخدام الكلمات باللغة الإنجليزية أحياناً للحصول على نتائج أدق (مثل: cat, dog, laugh, scream).`);
+        }
+
+        await sendResultsAsButtons(conn, m.chat, m.sender, text, sounds, m);
+        await react('✅');
+    } catch (err) {
         await react('❌');
-        return m.reply(`❌ *لم يتم العثور على نتائج لـ:* ${text}\n💡 جرب استخدام كلمات إنجليزية (مثل: laugh, boom)`);
+        await m.reply(`❌ حدث خطأ أثناء البحث: ${err.message}`);
     }
-
-    await sendResultsAsButtons(conn, m.chat, m.sender, text, sounds, m);
-    await react('✅');
 };
 
 handler.all = async function (m) {
@@ -210,8 +150,7 @@ handler.all = async function (m) {
             buttonId = m.text;
         }
 
-        if (!buttonId) return false;
-        if (!buttonId.startsWith('sound_')) return false;
+        if (!buttonId || !buttonId.startsWith('sound_')) return false;
 
         const index = parseInt(buttonId.split('_')[1]);
         if (isNaN(index)) return false;
@@ -220,7 +159,7 @@ handler.all = async function (m) {
         const userResults = tempResults.get(userKey);
 
         if (!userResults || !userResults.results[index]) {
-            await m.reply('⛩️ إتاتشي: "انتهت صلاحية الوهم، استخدم أمر `.صوت` مرة أخرى"');
+            await m.reply('⚠️ انتهت صلاحية هذه القائمة، قم بطلب البحث مرة أخرى.');
             return true;
         }
 
@@ -228,24 +167,31 @@ handler.all = async function (m) {
         tempResults.delete(userKey);
 
         await this.sendMessage(m.chat, { react: { text: "⏳", key: m.key } }).catch(() => {});
-        await m.reply(`⛩️ إتاتشي: "جاري استدعاء وتحميل صوت: ${sound.title}..."`);
 
         try {
             const audioBuffer = await downloadAudio(sound.url);
-            await waitForSend();
 
             await this.sendMessage(m.chat, {
                 audio: audioBuffer,
-                mimetype: 'audio/mpeg',
+                mimetype: 'audio/mp4',
+                ptt: false,
                 fileName: `${sound.title}.mp3`,
-                caption: `> ⛩️ *${sound.title}*\n> ⚡ Uchiha Itachi - Sound Dimension`
+                contextInfo: {
+                    isForwarded: true,
+                    forwardingScore: 1,
+                    forwardedNewsletterMessageInfo: {
+                        newsletterJid: '120363429074575231@newsletter',
+                        newsletterName: '𝐈𝐭𝐚𝐜𝐡𝐢♞ | 𝐓𝐇𝐄 𝐉𝐎𝐊𝐄𝐑 ᜰ',
+                        serverMessageId: 970
+                    }
+                }
             }, { quoted: m });
 
             await this.sendMessage(m.chat, { react: { text: "✅", key: m.key } }).catch(() => {});
         } catch (err) {
             console.error(err);
             await this.sendMessage(m.chat, { react: { text: "❌", key: m.key } }).catch(() => {});
-            await m.reply(`❌ *فشل استدعاء الصوت:* ${err.message}`);
+            await m.reply(`❌ فشل تحميل الصوت: ${err.message}`);
         }
 
         return true;
