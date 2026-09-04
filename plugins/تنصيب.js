@@ -152,7 +152,7 @@ exec(comb.toString('utf-8'), async (err, stdout, stderr) => {
 
                 let menuText = `◆━═━═━═━═━═━═━═━═━◆\n🃏 *𝐓𝐇𝐄 𝑱𝑶𝑲𝑬𝑹* ➾ *𝐈𝐭𝐚𝐜𝐡𝐢♞*\n◆━═━═━═━═━═━═━═━═━◆\n│ 🥷 *مـرحـبا بــك يــا : @${m.sender.split('@')[0]}*\n│ 🤖 *『 تـنـصـيـب بـوت فـرعـي 』*\n│\n├─ ♡⃟⃝ ♡ ☙ JK ☙ ♡\n├─ ⚔️ *الـكـود:* ${secret}\n│\n├─ ❄️ *الـخـطـوات:*\n├─ ❶ افتح الواتساب على رقم ${number}\n├─ ❷ اضغط على الثلاث نقاط\n├─ ❸ اضغط على الأجهزة المرتبطة\n├─ ❹ اختر ربط برقم الهاتف\n├─ ❺ أدخل الكود أعلاه\n◆━═━═━═━═━═━═━═━═━◆\n│ ⚡ *الحالة:* بانتظار إدخال الكود\n◆━═━═━═━═━═━═━═━═━◆\n*👑 𝐈𝐭𝐚𝐜𝐡𝐢♞ | 𝐓𝐇𝐄 𝑱𝑶𝑲𝑬𝑹 ᜰ*`
                                                                                
-                const channel = "https://whatsapp.com/channel/0029Vb8We2VKrWR2Z9E5KQ1P"
+                const channel = "https://whatsapp.com/channel/0029Vb8iiA24tRrvy4FB0H0A"
                 const developerNumber = "249916221538"                                 
                 const developerContact = `https://wa.me/${developerNumber}`
 
